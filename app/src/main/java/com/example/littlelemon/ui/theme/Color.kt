@@ -9,3 +9,10 @@ val Pink80 = Color(0xFFEFB8C8)
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
+
+//Primary colors
+val GreenLittleLemon = Color(0xFF495E57)
+val YellowLittleLemon = Color(0xFFF4CE14)
+//Secondary colors
+val ApricotLittleLemon = Color(0xFFEE9972)
+val ApricotPeachLittleLemon = Color(0xFFFBDABB)
