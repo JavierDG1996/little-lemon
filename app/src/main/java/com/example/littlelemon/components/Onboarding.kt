@@ -1,5 +1,7 @@
 package com.example.littlelemon.components
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -42,11 +45,18 @@ import com.example.littlelemon.ui.theme.GreenLittleLemon
 import com.example.littlelemon.ui.theme.YellowLittleLemon
 
 @Composable
-fun Onboarding(modifier: Modifier = Modifier) {
+fun Onboarding(modifier: Modifier = Modifier, onNavigateHome: () -> Unit) {
+
+    val context = LocalContext.current
+    val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+    val editor = sharedPreferences.edit()
 
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+
+    var showError by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -124,8 +134,26 @@ fun Onboarding(modifier: Modifier = Modifier) {
 
                 Spacer(modifier = Modifier.weight(1f))
 
+                if (showError) {
+                    Text(
+                        "Registro fallido. Por favor, introduzca todos los datos",
+                        color = Color.Red
+                    )
+                }
+
                 Button(
-                    onClick = {},
+                    onClick = {
+                        if (firstName.isBlank() || lastName.isBlank() || email.isBlank()) {
+                            showError = true
+                        } else {
+                            editor.putString("FIRST_NAME", firstName)
+                            editor.putString("LAST_NAME", lastName)
+                            editor.putString("EMAIL", email)
+                            editor.apply()
+                            onNavigateHome()
+                            showError = false
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 20.dp),
@@ -152,5 +180,5 @@ fun Onboarding(modifier: Modifier = Modifier) {
 @Preview(showSystemUi = true)
 @Composable
 fun OnboardingPreview(modifier: Modifier = Modifier) {
-    Onboarding()
+    Onboarding() {}
 }
