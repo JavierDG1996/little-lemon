@@ -76,7 +76,7 @@ fun Home(modifier: Modifier = Modifier, items: List<MenuItem>, onNavigateProfile
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.4f)
+                    .weight(0.45f)
                     .background(GreenLittleLemon)
                     .padding(16.dp)
             ) {
