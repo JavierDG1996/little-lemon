@@ -13,9 +13,10 @@ import com.example.littlelemon.components.Onboarding
 import com.example.littlelemon.components.Profile
 
 @Composable
-fun Navigation(modifier: Modifier = Modifier, navController: NavHostController) {
+fun Navigation(modifier: Modifier = Modifier, navController: NavHostController, items : List<MenuItem>) {
     val context = LocalContext.current
-    val sharedPreferences: SharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+    val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
 
     val firstName = sharedPreferences.getString("FIRST_NAME", "") ?: ""
     val lastName = sharedPreferences.getString("LAST_NAME", "") ?: ""
@@ -30,7 +31,7 @@ fun Navigation(modifier: Modifier = Modifier, navController: NavHostController) 
             }
         }
         composable(Home.route) {
-            Home(modifier = modifier) {
+            Home(modifier = modifier, items) {
                 navController.navigate(Profile.route)
             }
         }
