@@ -13,10 +13,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +44,15 @@ import com.example.littlelemon.ui.theme.YellowLittleLemon
 @Composable
 fun Home(modifier: Modifier = Modifier, items: List<MenuItem>, onNavigateProfile: () -> Unit) {
 
+    var searchPhrase by remember { mutableStateOf("") }
+    var itemsList by remember { mutableStateOf(items) }
+    val categories = mutableListOf<String>()
+
+    for (item in items) {
+        if (!categories.contains(item.category)) {
+            categories.add(item.category)
+        }
+    }
 
     Box(
         modifier = modifier.fillMaxSize()
@@ -94,11 +112,39 @@ fun Home(modifier: Modifier = Modifier, items: List<MenuItem>, onNavigateProfile
                     }
                     Spacer(Modifier.height(36.dp))
                     TextField(
-                        value = "",
-                        onValueChange = {},
+                        value = searchPhrase,
+                        onValueChange = { phrase ->
+                            searchPhrase = phrase
+                            itemsList = if (searchPhrase.isBlank()) {
+                                items
+                            } else {
+                                items.filter { it.title.contains(searchPhrase) }
+                            }
+                        },
                         modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("Enter search phrase") }
+                        placeholder = { Text("Enter search phrase") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = ""
+                            )
+                        }
                     )
+                }
+            }
+
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.15f)
+                    .padding(16.dp)
+            ) {
+                items(categories) { item ->
+                    Button(onClick = {
+                        itemsList = items.filter { it.category == item }
+                    }) {
+                        Text(text = item)
+                    }
                 }
             }
 
@@ -108,7 +154,7 @@ fun Home(modifier: Modifier = Modifier, items: List<MenuItem>, onNavigateProfile
                     .weight(0.6f)
                     .padding(16.dp)
             ) {
-                MenuItems(items)
+                MenuItems(itemsList)
             }
         }
 
