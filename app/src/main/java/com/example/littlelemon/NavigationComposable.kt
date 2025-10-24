@@ -31,12 +31,12 @@ fun Navigation(modifier: Modifier = Modifier, navController: NavHostController) 
         }
         composable(Home.route) {
             Home(modifier = modifier) {
-
+                navController.navigate(Profile.route)
             }
         }
         composable(Profile.route) {
             Profile(modifier = modifier) {
-
+                navController.navigate(OnBoarding.route)
             }
         }
     }
